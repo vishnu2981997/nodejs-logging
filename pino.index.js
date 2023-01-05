@@ -1,8 +1,9 @@
 const app = require('express')()
 const bodyParser = require('body-parser');
 const {logger, contextMiddleware} = require('./pino.logger');
-const { requestLoggerMiddleware } = require("./middleware");
+const { requestLoggerMiddleware, startTimeMiddleware } = require("./middleware");
 
+app.use(startTimeMiddleware);
 app.use(bodyParser.urlencoded({'extended': 'true'}));
 app.use(bodyParser.json());
 app.use(bodyParser.json({type: 'application/vnd.api+json'}));
