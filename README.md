@@ -21,6 +21,8 @@
 2. ```text
    ab -n 10000 -c 1000 http://localhost:3000/pino
    ```
+### STATS
+![image](https://user-images.githubusercontent.com/26568137/210474312-30b97f61-2f43-424c-95e8-6e44226d647c.png)
 
 ### no logs
 ![noLogs](https://user-images.githubusercontent.com/26568137/210473138-2237e768-ef78-4feb-a60a-646203fc2c3a.png)
