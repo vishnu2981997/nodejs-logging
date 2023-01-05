@@ -23,6 +23,18 @@ const logger = pino({
             err: (err) => {
                 return {stack: err.stack, msg: err.message}
             }
+        },
+        hooks: {
+            logMethod (inputArgs, method) {
+                if (inputArgs.length === 2 && typeof inputArgs[0] === "string") {
+                    const temp = inputArgs[0];
+                    inputArgs[0] = {
+                        additionalData: inputArgs[1],
+                    };
+                    inputArgs[1] = temp;
+                }
+                return method.apply(this, inputArgs)
+            }
         }
     },
     pino.multistream(streams)
