@@ -13,11 +13,17 @@ const streams = [
 
 const logger = pino({
         level: process.env.PINO_LOG_LEVEL || 'info',
+        timestamp: pino.stdTimeFunctions.isoTime,
         formatters: {
             level: (label) => {
                 return {level: label};
             },
         },
+        serializers: {
+            err: (err) => {
+                return {stack: err.stack, msg: err.message}
+            }
+        }
     },
     pino.multistream(streams)
 )
@@ -30,7 +36,19 @@ module.exports.logger = new Proxy(logger, {
 });
 
 module.exports.contextMiddleware = (req, res, next) => {
-    const child = logger.child({ requestId: uuid.v4() });
+    const child = logger.child({
+        requestId: uuid.v4(),
+        correlationId: uuid.v4(),
+        method: req.method,
+        url: req.url,
+        query: req.query,
+        params: req.params,
+        body: req.body,
+        contentType: req.headers["content-type"],
+        userAgent: req.headers["uer-agent"],
+        host: req.headers.host,
+        clientIP: req.socket.remoteAddress,
+    });
     const store = new Map();
     store.set('logger', child);
 
